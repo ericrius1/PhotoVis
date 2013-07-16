@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lobster'), url(http://themes.googleusercontent.com/licensed/font?kit=MeFZ5NpSE1j8mC06Jh1miP1vOkk9qMeS108bMeDXAw5MG2pAIe3sO5b0QXI_bV6G) format('woff2'), url(http://themes.googleusercontent.com/licensed/font?kit=pAEjWxDCHGX7OXS3SC2ty_1vOkk9qMeS108bMeDXAw5MG2pAIe3sO5b0QXI_bV6G) format('woff');
+}
