@@ -55,7 +55,7 @@
           }
           boost = boost / soundArray.length;
         };
-        play();
+        //play();
       }
     );
   };

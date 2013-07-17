@@ -280,13 +280,7 @@ AEROTWIST.Surface = new function() {
    */
 
   function update() {
-
-
-
-   
-
     surface.materials[1].opacity = vars["wireframeOpacity"];
-
     var v = surfaceVerts.length;
     while (v--) {
       var vertex = surfaceVerts[v],
@@ -334,6 +328,7 @@ AEROTWIST.Surface = new function() {
     }
   }
 
+
   function disturbSurface(event, magnitude) {
     if (running) {
       var mouseX = event.offsetX || (event.clientX - 220);
@@ -351,6 +346,7 @@ AEROTWIST.Surface = new function() {
         var iPoint = intersects[0].point,
           xVal = Math.floor((iPoint.x / SURFACE_WIDTH) * X_RESOLUTION),
           yVal = Math.floor((iPoint.z / SURFACE_HEIGHT) * Y_RESOLUTION);
+          console.log("XVAL: ", xVal);
 
         xVal += X_RESOLUTION * .5;
         yVal += Y_RESOLUTION * .5;
