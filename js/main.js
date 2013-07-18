@@ -254,7 +254,6 @@ PHOTOVIS.Surface = new function() {
 $(document).ready(function() {
 
   if (Modernizr.webgl) {
-    // Go!
     //PHOTOVIS.Surface.init();
   }
 });
