@@ -87,8 +87,7 @@ AEROTWIST.Surface = new function() {
     vars["raindrops"] = true;
     vars["elasticity"] = 0.001;
 
-    // add listeners
-    addEventListeners();
+
 
     // create our stuff
     if (createRenderer()) {
@@ -239,21 +238,9 @@ AEROTWIST.Surface = new function() {
    */
 
   function addEventListeners() {
-    // window event
-    $(window).resize(callbacks.windowResize);
-    $(window).keydown(callbacks.keyDown);
-
-    // click handler
-    $(document.body).mousedown(callbacks.mouseDown);
-    $(document.body).mouseup(callbacks.mouseUp);
-    $(document.body).click(callbacks.mouseClick);
 
     var container = $container[0];
 
-
-    // GUI events
-    $(".gui-set a").click(callbacks.guiClick);
-    $(".gui-set a.default").trigger('click');
   }
 
   function updatePlane() {
@@ -357,64 +344,7 @@ AEROTWIST.Surface = new function() {
     }
   }
 
-  /**
-   * Our internal callbacks object - a neat
-   * and tidy way to organise the various
-   * callbacks in operation.
-   */
-  callbacks = {
-    mouseDown: function() {
-      document.addEventListener('mousemove', callbacks.mouseMove, false);
-    },
-    mouseMove: function(event) {
-      disturbSurface(event, vars["magnitude"]);
-    },
-    mouseClick: function(event) {
-      disturbSurface(event, vars["magnitude"] * 5);
-    },
-    mouseUp: function() {
-      document.removeEventListener('mousemove', callbacks.mouseMove, false);
-    },
-    guiClick: function() {
-      var $this = $(this),
-        varName = $this.data("guivar"),
-        varVal = $this.data("guival");
-      if (vars[varName] !== null) {
-        vars[varName] = varVal;
-      }
 
-      $this.siblings().addClass('disabled');
-      $this.removeClass('disabled');
-
-      return false;
-    },
-    windowResize: function() {
-
-      if (camera) {
-        width = $container.width(),
-        height = $container.height(),
-        camera.aspect = width / height,
-        renderer.setSize(width, height);
-
-        //camera.updateProjectionMatrix();
-      }
-    },
-    keyDown: function(event) {
-
-      if (camera) {
-        switch (event.keyCode) {
-          case 37: // Left
-            orbitValue -= 0.1;
-            break;
-
-          case 39: // Right
-            orbitValue += 0.1;
-            break;
-
-        }
-      }
-    }
-  };
 };
 
 // Surfaceize!
