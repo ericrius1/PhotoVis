@@ -225,7 +225,7 @@ PHOTOVIS.Surface = new function() {
 
     surface.geometry.computeFaceNormals(true);
     surface.geometry.verticesNeedUpdate = true;
-    surface.geometry.normalsNeedUpdate = true;
+    //surface.geometry.normalsNeedUpdate = true;
 
     // set up a request for a render
     requestAnimationFrame(render);
@@ -255,6 +255,6 @@ $(document).ready(function() {
 
   if (Modernizr.webgl) {
     // Go!
-    PHOTOVIS.Surface.init();
+    //PHOTOVIS.Surface.init();
   }
 });
