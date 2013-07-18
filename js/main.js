@@ -80,12 +80,10 @@ AEROTWIST.Surface = new function() {
     };
 
     // set up our initial opts
-    opts["magnitude"] = 30;
-    opts["orbitSpeed"] = 0.001;
-    opts["orbit"] = true;
+    opts["magnitude"] = 10;
     opts["wireframeOpacity"] = 1;
     opts["raindrops"] = true;
-    opts["elasticity"] = 0.001;
+    opts["elasticity"] = 0.00001;
 
 
 
@@ -199,12 +197,15 @@ AEROTWIST.Surface = new function() {
    */
 
   function updateMusic() {
-
-    index = (3 * (X_RESOLUTION + 1)) + 3;
-
-    if (index >= 0 && index < surfaceVerts.length) {
-      surfaceVerts[index].velocity.z += opts.magnitude;
+    var k = 0;
+    for (var i = 0; i < surfaceVerts.length; i++) {
+      var scale = (soundArray[k] + boost) / 30;
+      if(scale > 1){
+        surfaceVerts[i].velocity.z = scale;
+      }
+      k += (k < soundArray.length ? 1 : 0);
     }
+
   }
 
   function update() {
@@ -212,7 +213,7 @@ AEROTWIST.Surface = new function() {
     var v = surfaceVerts.length;
     while (v--) {
       var vertex = surfaceVerts[v],
-        acceleration = new THREE.Vector3(0, 0, -vertex.z * opts["elasticity"]),
+        acceleration = new THREE.Vector3(0, 0, -vertex.z * opts["elasticity"] * 10000),
         springs = vertex.springs,
         s = springs.length;
 
@@ -220,9 +221,10 @@ AEROTWIST.Surface = new function() {
 
       while (s--) {
         var spring = springs[s],
-          extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
+          //Calculates z offset for area and surroundings
+            extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
 
-        acceleration = new THREE.Vector3(0, 0, extension * opts["elasticity"] * 50);
+        acceleration = new THREE.Vector3(0, 0, extension * opts["elasticity"] * 500);
         surfaceVerts[spring.end].velocity.add(acceleration);
         surfaceVerts[spring.start].velocity.sub(acceleration);
       }

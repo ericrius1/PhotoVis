@@ -440,7 +440,7 @@ AEROTWIST.Surface = new function()
         intersects  = ray.intersectObject(surface);
       
       // if the ray intersects with the
-      // surface work out where
+      // surface work out upd
       if(intersects.length) {
         var iPoint  = intersects[0].point,
           xVal  = Math.floor((iPoint.x / SURFACE_WIDTH) * X_RESOLUTION),
