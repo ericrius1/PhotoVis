@@ -98,10 +98,6 @@ AEROTWIST.Surface = new function() {
       // start rendering, which will
       // do nothing until the image is dropped
       update();
-
-      $gui.addClass('live');
-    } else {
-      $('html').removeClass('webgl').addClass('no-webgl');
     }
   };
 
@@ -128,7 +124,9 @@ AEROTWIST.Surface = new function() {
     pointLight.position.x = 10;
     pointLight.position.y = 100;
     pointLight.position.z = 10;
-    scene.addLight(pointLight);
+    scene.add(pointLight);
+
+    scene.add( new THREE.AmbientLight( 0xFFFFFF ) );
   }
 
   /**
@@ -136,22 +134,20 @@ AEROTWIST.Surface = new function() {
    */
 
   function createObjects() {
+
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: ImageUtils.loadTexture("images/love.jpg"),
+      map: THREE.ImageUtils.loadTexture("images/love.jpg"),
       shading: THREE.SmoothShading
-    }),
-      planeMaterialWire = new THREE.MeshLambertMaterial({
-        color: 0xFFFFFF,
-        wireframe: true
-      });
+    });
 
-    surface = new THREE.Mesh(new Plane(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), [planeMaterial, planeMaterialWire]);
+    surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
     surface.rotation.x = -Math.PI * .5;
     surface.overdraw = true;
-    scene.addChild(surface);
+    scene.add(surface);
 
     // go through each vertex
+
     surfaceVerts = surface.geometry.vertices;
     sCount = surfaceVerts.length;
 
@@ -159,11 +155,12 @@ AEROTWIST.Surface = new function() {
     // mesh in x,y,z order I think
     while (sCount--) {
       var vertex = surfaceVerts[sCount];
+
       vertex.springs = [];
       vertex.velocity = new THREE.Vector3();
 
       // connect this vertex to the ones around it
-      if (vertex.position.x > (-SURFACE_WIDTH * .5)) {
+      if (vertex.x > (-SURFACE_WIDTH * .5)) {
         // connect to left
         vertex.springs.push({
           start: sCount,
@@ -171,7 +168,7 @@ AEROTWIST.Surface = new function() {
         });
       }
 
-      if (vertex.position.x < (SURFACE_WIDTH * .5)) {
+      if (vertex.x < (SURFACE_WIDTH * .5)) {
         // connect to right
         vertex.springs.push({
           start: sCount,
@@ -179,7 +176,7 @@ AEROTWIST.Surface = new function() {
         });
       }
 
-      if (vertex.position.y < (SURFACE_HEIGHT * .5)) {
+      if (vertex.y < (SURFACE_HEIGHT * .5)) {
         // connect above
         vertex.springs.push({
           start: sCount,
@@ -187,7 +184,7 @@ AEROTWIST.Surface = new function() {
         });
       }
 
-      if (vertex.position.y > (-SURFACE_HEIGHT * .5)) {
+      if (vertex.y > (-SURFACE_HEIGHT * .5)) {
         // connect below
         vertex.springs.push({
           start: sCount,
@@ -206,7 +203,7 @@ AEROTWIST.Surface = new function() {
 
     try {
       renderer = new THREE.WebGLRenderer();
-      camera = new THREE.Camera(45, width / height, NEAR, FAR);
+      camera = new THREE.PerspectiveCamera(45, width / height, NEAR, FAR);
       scene = new THREE.Scene();
       canvas = document.createElement('canvas');
       canvas.width = SURFACE_WIDTH;
@@ -268,10 +265,10 @@ AEROTWIST.Surface = new function() {
 
     var newPlaneMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: ImageUtils.loadTexture(canvas.toDataURL("image/png")),
+      map: THREE.ImageUtils.loadTexture(canvas.toDataURL("image/png")),
       shading: THREE.SmoothShading
     });
-    surface.materials[0] = newPlaneMaterial;
+    surface.material[0] = newPlaneMaterial;
   }
 
   /**
@@ -280,33 +277,32 @@ AEROTWIST.Surface = new function() {
    */
 
   function update() {
-    surface.materials[1].opacity = vars["wireframeOpacity"];
     var v = surfaceVerts.length;
     while (v--) {
       var vertex = surfaceVerts[v],
-        acceleration = new THREE.Vector3(0, 0, -vertex.position.z * vars["elasticity"]),
+        acceleration = new THREE.Vector3(0, 0, -vertex.z * vars["elasticity"]),
         springs = vertex.springs,
         s = springs.length;
 
-      vertex.velocity.addSelf(acceleration);
+      vertex.velocity.add(acceleration);
 
       while (s--) {
         var spring = springs[s],
-          extension = surfaceVerts[spring.start].position.z - surfaceVerts[spring.end].position.z;
+          extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
 
         acceleration = new THREE.Vector3(0, 0, extension * vars["elasticity"] * 50);
-        surfaceVerts[spring.end].velocity.addSelf(acceleration);
-        surfaceVerts[spring.start].velocity.subSelf(acceleration);
+        surfaceVerts[spring.end].velocity.add(acceleration);
+        surfaceVerts[spring.start].velocity.sub(acceleration);
       }
 
-      vertex.position.addSelf(vertex.velocity);
+      vertex.add(vertex.velocity);
 
       vertex.velocity.multiplyScalar(DAMPEN);
     }
 
     surface.geometry.computeFaceNormals(true);
-    surface.geometry.__dirtyVertices = true;
-    surface.geometry.__dirtyNormals = true;
+    surface.geometry.verticesNeedUpdate = true;
+    surface.geometry.normalsNeedUpdate = true;
 
     // set up a request for a render
     requestAnimationFrame(render);
@@ -324,6 +320,7 @@ AEROTWIST.Surface = new function() {
 
     // set up the next frame
     if (running) {
+
       update();
     }
   }
@@ -337,7 +334,7 @@ AEROTWIST.Surface = new function() {
       var vector = new THREE.Vector3((mouseX / width) * 2 - 1, -(mouseY / height) * 2 + 1, 0.5);
       projector.unprojectVector(vector, camera);
 
-      var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize()),
+      var ray = new THREE.Ray(camera.position, vector.sub(camera.position).normalize()),
         intersects = ray.intersectObject(surface);
 
       // if the ray intersects with the
@@ -399,7 +396,7 @@ AEROTWIST.Surface = new function() {
         camera.aspect = width / height,
         renderer.setSize(width, height);
 
-        camera.updateProjectionMatrix();
+        //camera.updateProjectionMatrix();
       }
     },
     keyDown: function(event) {
@@ -415,7 +412,6 @@ AEROTWIST.Surface = new function() {
             break;
 
         }
-        camera.update();
       }
     }
   };
