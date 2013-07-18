@@ -6,12 +6,13 @@ PHOTOVIS.Audio = new function() {
 
 
     var context;
-    var source, sourceJs;
+    var source;
     var analyser;
     var buffer;
     var url = 'music/lights.mp3';
     this.soundArray = new Array();
     this.boost = 0;
+    this.sourceJs;
 
     try {
       if (typeof webkitAudioContext === 'function') {
@@ -50,7 +51,8 @@ PHOTOVIS.Audio = new function() {
           analyser.connect(sourceJs);
           source.connect(context.destination);
 
-          sourceJs.onaudioprocess = function(e) {
+
+          this.sourceJs.onaudioprocess = function(e) {
             PHOTOVIS.Audio.soundArray = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(PHOTOVIS.Audio.soundArray);
             this.boost = 0;

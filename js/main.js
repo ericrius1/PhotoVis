@@ -189,7 +189,6 @@ PHOTOVIS.Surface = new function() {
 
   function updateMusic() {
     var k = 0;
-    console.log(PHOTOVIS.Audio.boost)
     for (var i = 0; i < surfaceVerts.length; i++) {
       var scale = (PHOTOVIS.Audio.soundArray[k] + PHOTOVIS.Audio.boost) / 30;
       if (scale > 1) {
