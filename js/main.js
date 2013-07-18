@@ -21,7 +21,7 @@
  */
 var AEROTWIST = AEROTWIST || {};
 AEROTWIST.Surface = new function() {
-  // internal vars
+  // internal opts
   var camera,
     scene,
     renderer = null,
@@ -31,7 +31,7 @@ AEROTWIST.Surface = new function() {
     width = $container.width(),
     height = $container.height(),
     $gui = $('#gui'),
-    vars = [],
+    opts = [],
     projector = new THREE.Projector(),
     center = new THREE.Vector3(),
     orbitCamera = true,
@@ -79,53 +79,29 @@ AEROTWIST.Surface = new function() {
       return false;
     };
 
-    // set up our initial vars
-    vars["magnitude"] = 30;
-    vars["orbitSpeed"] = 0.001;
-    vars["orbit"] = true;
-    vars["wireframeOpacity"] = 1;
-    vars["raindrops"] = true;
-    vars["elasticity"] = 0.001;
+    // set up our initial opts
+    opts["magnitude"] = 30;
+    opts["orbitSpeed"] = 0.001;
+    opts["orbit"] = true;
+    opts["wireframeOpacity"] = 1;
+    opts["raindrops"] = true;
+    opts["elasticity"] = 0.001;
 
 
 
     // create our stuff
     if (createRenderer()) {
       createObjects();
-      addLights();
-
-      // start rendering, which will
-      // do nothing until the image is dropped
+      scene.add(new THREE.AmbientLight(0xFFFFFF));
       update();
     }
   };
-
-
- 
-
-
 
   function cancel(event) {
     if (event.preventDefault)
       event.preventDefault();
 
     return false;
-  }
-
-  /**
-   * Adds some basic lighting to the
-   * scene. Only applies to the centres
-   */
-
-  function addLights() {
-    // point
-    pointLight = new THREE.PointLight(0xFFFFFF);
-    pointLight.position.x = 10;
-    pointLight.position.y = 100;
-    pointLight.position.z = 10;
-    scene.add(pointLight);
-
-    scene.add( new THREE.AmbientLight( 0xFFFFFF ) );
   }
 
   /**
@@ -199,75 +175,44 @@ AEROTWIST.Surface = new function() {
 
   function createRenderer() {
     var ok = false;
+    renderer = new THREE.WebGLRenderer();
+    camera = new THREE.PerspectiveCamera(45, width / height, NEAR, FAR);
+    scene = new THREE.Scene();
+    canvas = document.createElement('canvas');
+    canvas.width = SURFACE_WIDTH;
+    canvas.height = SURFACE_HEIGHT;
+    context = canvas.getContext('2d');
+    // position the camera
+    camera.position.y = 220;
+    camera.position.z = DEPTH;
 
-    try {
-      renderer = new THREE.WebGLRenderer();
-      camera = new THREE.PerspectiveCamera(45, width / height, NEAR, FAR);
-      scene = new THREE.Scene();
-      canvas = document.createElement('canvas');
-      canvas.width = SURFACE_WIDTH;
-      canvas.height = SURFACE_HEIGHT;
-      context = canvas.getContext('2d');
-
-      context.fillStyle = "#000000";
-      context.beginPath();
-      context.fillRect(0, 0, SURFACE_WIDTH, SURFACE_HEIGHT);
-      context.closePath();
-      context.fill();
-
-
-      // position the camera
-      camera.position.y = 220;
-      camera.position.z = DEPTH;
-
-      // start the renderer
-      renderer.setSize(width, height);
-      $container.append(renderer.domElement);
-
-      ok = true;
-    } catch (e) {
-      ok = false;
-    }
-
-    return ok;
+    // start the renderer
+    renderer.setSize(width, height);
+    $container.append(renderer.domElement);
+    return true;
   }
 
-  /**
-   * Sets up the event listeners for DnD, the GUI
-   * and window resize
-   */
-
-  function addEventListeners() {
-
-    var container = $container[0];
-
-  }
-
-  function updatePlane() {
-    var ratio = 1 / Math.max(image.width / SURFACE_WIDTH, image.height / SURFACE_HEIGHT);
-    var scaledWidth = image.width * ratio;
-    var scaledHeight = image.height * ratio;
-    context.drawImage(image,
-      0, 0, image.width, image.height, (SURFACE_WIDTH - scaledWidth) * .5, (SURFACE_HEIGHT - scaledHeight) * .5, scaledWidth, scaledHeight);
-
-    var newPlaneMaterial = new THREE.MeshLambertMaterial({
-      color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture(canvas.toDataURL("image/png")),
-      shading: THREE.SmoothShading
-    });
-    surface.material[0] = newPlaneMaterial;
-  }
 
   /**
    * Updates the velocity and position
    * of the particles in the view
    */
 
+  function updateMusic() {
+
+    index = (3 * (X_RESOLUTION + 1)) + 3;
+
+    if (index >= 0 && index < surfaceVerts.length) {
+      surfaceVerts[index].velocity.z += opts.magnitude;
+    }
+  }
+
   function update() {
+    updateMusic();
     var v = surfaceVerts.length;
     while (v--) {
       var vertex = surfaceVerts[v],
-        acceleration = new THREE.Vector3(0, 0, -vertex.z * vars["elasticity"]),
+        acceleration = new THREE.Vector3(0, 0, -vertex.z * opts["elasticity"]),
         springs = vertex.springs,
         s = springs.length;
 
@@ -277,7 +222,7 @@ AEROTWIST.Surface = new function() {
         var spring = springs[s],
           extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
 
-        acceleration = new THREE.Vector3(0, 0, extension * vars["elasticity"] * 50);
+        acceleration = new THREE.Vector3(0, 0, extension * opts["elasticity"] * 50);
         surfaceVerts[spring.end].velocity.add(acceleration);
         surfaceVerts[spring.start].velocity.sub(acceleration);
       }
@@ -300,6 +245,7 @@ AEROTWIST.Surface = new function() {
    */
 
   function render() {
+    camera.lookAt(surface.position);
     // only render
     if (renderer) {
       renderer.render(scene, camera);
@@ -307,43 +253,9 @@ AEROTWIST.Surface = new function() {
 
     // set up the next frame
     if (running) {
-
       update();
     }
   }
-
-
-  function disturbSurface(event, magnitude) {
-    if (running) {
-      var mouseX = event.offsetX || (event.clientX - 220);
-      var mouseY = event.offsetY || event.clientY;
-
-      var vector = new THREE.Vector3((mouseX / width) * 2 - 1, -(mouseY / height) * 2 + 1, 0.5);
-      projector.unprojectVector(vector, camera);
-
-      var ray = new THREE.Ray(camera.position, vector.sub(camera.position).normalize()),
-        intersects = ray.intersectObject(surface);
-
-      // if the ray intersects with the
-      // surface work out where
-      if (intersects.length) {
-        var iPoint = intersects[0].point,
-          xVal = Math.floor((iPoint.x / SURFACE_WIDTH) * X_RESOLUTION),
-          yVal = Math.floor((iPoint.z / SURFACE_HEIGHT) * Y_RESOLUTION);
-          console.log("XVAL: ", xVal);
-
-        xVal += X_RESOLUTION * .5;
-        yVal += Y_RESOLUTION * .5;
-
-        index = (yVal * (X_RESOLUTION + 1)) + xVal;
-
-        if (index >= 0 && index < surfaceVerts.length) {
-          surfaceVerts[index].velocity.z += magnitude;
-        }
-      }
-    }
-  }
-
 
 };
 
