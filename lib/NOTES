@@ -1,3 +1,8 @@
 Use google image API
 Use lyrics API
 Get rid of shitty words like the
+
+
+
+WebAudio API and Garbage collector
+The JavaScriptAudioNode process must be top level scope or browser will stop firing the onaudioprocess callback

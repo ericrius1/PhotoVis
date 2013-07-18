@@ -86,6 +86,16 @@ PHOTOVIS.Surface = new function() {
     }
   };
 
+  this.changePhoto = function(url){
+    var planeMaterial = new THREE.MeshLambertMaterial({
+      color: 0xFFFFFF,
+      map: THREE.ImageUtils.loadTexture(url),
+      shading: THREE.SmoothShading
+    });
+    PHOTOVIS.Surface.surface.material = planeMaterial;
+
+  }
+
   function cancel(event) {
     if (event.preventDefault)
       event.preventDefault();
@@ -108,6 +118,7 @@ PHOTOVIS.Surface = new function() {
     surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
     surface.rotation.x = -Math.PI * .5;
     surface.overdraw = true;
+    PHOTOVIS.Surface.surface = surface;
     scene.add(surface);
 
     // go through each vertex
@@ -249,6 +260,8 @@ PHOTOVIS.Surface = new function() {
       update();
     }
   }
+
+
 
 };
 
