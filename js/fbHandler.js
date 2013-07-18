@@ -7,8 +7,11 @@ PHOTOVIS.FbHandler = new function() {
       console.log('Good to see you, ' + response.name + '.');
     });
 
-    FB.api('/me/permissions', function(response){
-      debugger;
+    FB.api('/me/photos', function(response){
+      var photos = response.data;
+      var photoIndex = Math.floor(Math.random() * photos.length);
+      var photoURL = photos[photoIndex].source;
+      PHOTOVIS.Surface.init(photoURL);
     })
   };
 }

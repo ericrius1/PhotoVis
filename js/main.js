@@ -3,6 +3,7 @@ PHOTOVIS.Surface = new function() {
   // internal opts
   var camera,
     scene,
+    photoURL,
     renderer = null,
     canvas = null,
     context = null,
@@ -66,7 +67,8 @@ PHOTOVIS.Surface = new function() {
    * Initializes the experiment and kicks
    * everything off. Yay!
    */
-  this.init = function() {
+  this.init = function(url) {
+    photoURL = url;
     // stop the user clicking
     document.onselectstart = function() {
       return false;
@@ -99,7 +101,7 @@ PHOTOVIS.Surface = new function() {
 
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture("images/love.jpg"),
+      map: THREE.ImageUtils.loadTexture(photoURL),
       shading: THREE.SmoothShading
     });
 
@@ -250,10 +252,3 @@ PHOTOVIS.Surface = new function() {
 
 };
 
-// Surfaceize!
-$(document).ready(function() {
-
-  if (Modernizr.webgl) {
-    //PHOTOVIS.Surface.init();
-  }
-});
