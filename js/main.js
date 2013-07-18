@@ -1,26 +1,5 @@
-/**
- * Copyright (C) 2011 by Paul Lewis
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-var AEROTWIST = AEROTWIST || {};
-AEROTWIST.Surface = new function() {
+var PHOTOVIS = PHOTOVIS || {};
+PHOTOVIS.Surface = new function() {
   // internal opts
   var camera,
     scene,
@@ -58,6 +37,12 @@ AEROTWIST.Surface = new function() {
     DROP_RATE = 200,
     fin = true;
 
+   var GUIOptions = function() {
+    // set up our initial opts
+    this.accelMod = 5000;
+    this.elasticity =  0.00001;
+  }
+
   this.pause = function() {
     running = false;
   }
@@ -67,6 +52,14 @@ AEROTWIST.Surface = new function() {
       running = true;
       update();
     }
+  }
+
+  this.setUpGUI = function() {
+    opts = new GUIOptions();
+    var gui = new dat.GUI();
+    gui.add(opts, 'accelMod', 1000, 10000);
+    gui.add( opts, 'elasticity', .00001, .0001);
+
   }
 
   /**
@@ -79,11 +72,7 @@ AEROTWIST.Surface = new function() {
       return false;
     };
 
-    // set up our initial opts
-    opts["magnitude"] = 10;
-    opts["wireframeOpacity"] = 1;
-    opts["raindrops"] = true;
-    opts["elasticity"] = 0.00001;
+    this.setUpGUI();
 
 
 
@@ -200,7 +189,7 @@ AEROTWIST.Surface = new function() {
     var k = 0;
     for (var i = 0; i < surfaceVerts.length; i++) {
       var scale = (soundArray[k] + boost) / 30;
-      if(scale > 1){
+      if (scale > 1) {
         surfaceVerts[i].velocity.z = scale;
       }
       k += (k < soundArray.length ? 1 : 0);
@@ -213,7 +202,7 @@ AEROTWIST.Surface = new function() {
     var v = surfaceVerts.length;
     while (v--) {
       var vertex = surfaceVerts[v],
-        acceleration = new THREE.Vector3(0, 0, -vertex.z * opts["elasticity"] * 10000),
+        acceleration = new THREE.Vector3(0, 0, -vertex.z * opts["elasticity"] * opts["accelMod"]),
         springs = vertex.springs,
         s = springs.length;
 
@@ -222,7 +211,7 @@ AEROTWIST.Surface = new function() {
       while (s--) {
         var spring = springs[s],
           //Calculates z offset for area and surroundings
-            extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
+          extension = surfaceVerts[spring.start].z - surfaceVerts[spring.end].z;
 
         acceleration = new THREE.Vector3(0, 0, extension * opts["elasticity"] * 500);
         surfaceVerts[spring.end].velocity.add(acceleration);
@@ -266,6 +255,6 @@ $(document).ready(function() {
 
   if (Modernizr.webgl) {
     // Go!
-    AEROTWIST.Surface.init();
+    PHOTOVIS.Surface.init();
   }
 });
