@@ -36,9 +36,9 @@ PHOTOVIS.FB = new function() {
 
 
       SC.get("/tracks", {
-        limit: 30,
+        limit: 5,
         filter: "streamable",
-        q: "Purity Ring",
+        q: bandLikes[1],
         consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
       }, function(search_tracks) {
         var trackURL = "https://api.soundcloud.com/tracks/" +search_tracks[0].id+ "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
