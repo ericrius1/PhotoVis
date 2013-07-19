@@ -69,7 +69,24 @@ PHOTOVIS.Audio = new function() {
             }
             PHOTOVIS.Audio.boost = PHOTOVIS.Audio.boost / PHOTOVIS.Audio.soundArray.length;
           };
-          play();
+
+          FB.api('/me/photos', function(response) {
+            var photos = response.data;
+            //create a shuffled list of photoURLS
+            var photoURLS = _.shuffle(_.pluck(photos, 'source'));
+            var photoURL = photoURLS[0];
+            var index = 1;
+            PHOTOVIS.Surface.init(photoURL);
+            play();
+            setInterval(function() {
+              var photoURL = photoURLS[index];
+
+              PHOTOVIS.Surface.changePhoto(photoURL);
+              index++;
+            }, 5000)
+
+          })
+      
         }
       );
     };
@@ -78,6 +95,7 @@ PHOTOVIS.Audio = new function() {
 
 
     function play() {
+
       source.noteOn(0);
     }
   }
