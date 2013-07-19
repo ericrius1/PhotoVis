@@ -23,5 +23,17 @@ PHOTOVIS.FB = new function() {
       }, 5000)
 
     })
+
+    //Get user music likes
+    FB.api('me/likes', function(response){
+      var likes = response.data;
+      var bandLikes = [];
+      for(var i = 0; i < likes.length; i++){
+        if(likes[i].category === "Musician/band"){
+          bandLikes.push(likes[i].name)
+        }
+      }
+      console.log(bandLikes);
+    })
   };
 }
