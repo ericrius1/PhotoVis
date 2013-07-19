@@ -17,10 +17,9 @@ PHOTOVIS.FB = new function() {
 
 
       //Now start audio
-
       var bandIndex = Math.floor(Math.random() * bandLikes.length);
       SC.get("/tracks", {
-        limit: 5,
+        limit: 10,
         filter: "streamable",
         q: bandLikes[bandIndex],
         consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
@@ -31,7 +30,6 @@ PHOTOVIS.FB = new function() {
         var trackURL = "https://api.soundcloud.com/tracks/" + search_tracks[trackIndex].id + "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
         PHOTOVIS.Audio.init(trackURL);
         $('#fbContainer').hide();
-
       });
     })
   };
