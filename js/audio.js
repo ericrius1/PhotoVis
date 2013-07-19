@@ -14,10 +14,6 @@ PHOTOVIS.Audio = new function() {
     this.boost = 0;
     this.sourceJs;
 
-    $.ajaxPrefilter(function(settings, _, jqXHR) {
-      jqXHR.setRequestHeader("Access-Control-Allow-Origin", "*");
-    });
-
     try {
       if (typeof webkitAudioContext === 'function') {
         context = new webkitAudioContext();
@@ -29,14 +25,13 @@ PHOTOVIS.Audio = new function() {
     }
 
 
-    $.ajax({
-      url: 'http://songza.com/listen/minimalist-indie-pop-evening-TacticCo/',
-      datatType: 'arraybuffer',
-      success: function(data) {
-        console.log("shnur");
-        debugger;
-      }
-    });
+    // $.ajax({
+    //   url: url,
+    //   datatType: 'arraybuffer',
+    //   success: function(data){
+    //     conso
+    //   }
+    // });
 
     var handleAudio = function(data) {
       debugger;

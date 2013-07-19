@@ -25,15 +25,32 @@ PHOTOVIS.FB = new function() {
     })
 
     //Get user music likes
-    FB.api('me/likes', function(response){
+    FB.api('me/likes', function(response) {
       var likes = response.data;
       var bandLikes = [];
-      for(var i = 0; i < likes.length; i++){
-        if(likes[i].category === "Musician/band"){
+      for (var i = 0; i < likes.length; i++) {
+        if (likes[i].category === "Musician/band") {
           bandLikes.push(likes[i].name)
         }
       }
       console.log(bandLikes);
+
+
+      SC.get("/tracks", {
+        limit: 30,
+        filter: "streamable",
+        q: "Purity Ring",
+        consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
+      }, function(search_tracks) {
+        debugger;
+      });
     })
   };
 }
+
+
+
+
+
+
+
