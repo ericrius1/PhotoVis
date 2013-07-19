@@ -3,10 +3,7 @@ var PHOTOVIS = PHOTOVIS || {};
 PHOTOVIS.FB = new function() {
 
   this.init = function() {
-    FB.api('/me', function(response) {
-      console.log('Good to see you, ' + response.name + '.');
-    });
-
+    var bandLikes = [];
     FB.api('/me/photos', function(response) {
       var photos = response.data;
       //create a shuffled list of photoURLS
@@ -26,22 +23,23 @@ PHOTOVIS.FB = new function() {
     //Get user music likes
     FB.api('me/likes', function(response) {
       var likes = response.data;
-      var bandLikes = [];
       for (var i = 0; i < likes.length; i++) {
         if (likes[i].category === "Musician/band") {
           bandLikes.push(likes[i].name)
         }
       }
-      console.log(bandLikes);
 
-
+      var bandIndex = Math.floor(Math.random() * bandLikes.length);
       SC.get("/tracks", {
         limit: 5,
         filter: "streamable",
-        q: bandLikes[1],
+        q: bandLikes[bandIndex],
         consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
       }, function(search_tracks) {
-        var trackURL = "https://api.soundcloud.com/tracks/" +search_tracks[0].id+ "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
+        var trackIndex = Math.floor(Math.random() * search_tracks.length);
+        console.log("MUSICIAN: ", bandLikes[bandIndex]);
+        console.log("SONG NAME: ",search_tracks[trackIndex].title);
+        var trackURL = "https://api.soundcloud.com/tracks/" +search_tracks[trackIndex].id+ "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
         PHOTOVIS.Audio.init(trackURL);
       });
     })
