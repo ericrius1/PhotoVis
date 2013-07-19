@@ -42,13 +42,18 @@ PHOTOVIS.FB = new function() {
         q: "Purity Ring",
         consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
       }, function(search_tracks) {
-        debugger;
+        var trackURL = "https://api.soundcloud.com/tracks/" +search_tracks[0].id+ "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
+        var audioElement = "<audio preload='auto' autoplay src ="+trackURL+"></audio>"
+        console.log(trackURL);
+        $('body').append(audioElement);
       });
     })
   };
 }
 
 
+//<audio preload="auto" autoplay="" src="https://api.soundcloud.com/tracks/101650333/stream?oauth_consumer_key=OV0rhviPClsRKXnSyHuyA"></audio>
+//<audio preload = "auto" autoplaysrc="https://api.soundcloud.com/tracks13478383/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717"></audio>
 
 
 
