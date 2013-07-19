@@ -14,26 +14,22 @@ PHOTOVIS.Surface = new function() {
     opts = [],
     projector = new THREE.Projector(),
     center = new THREE.Vector3(),
-    lastRainDrop = 0,
     image = null,
     running = true,
 
     // core objects
     surface = null,
-    surfaceVerts = [],
-    raindrops = [],
+    surfaceVerts = []
 
     // constants
     DAMPEN = .9,
-    AGGRESSION = 400,
-    DEPTH = 500,
+    DEPTH = 2000,
     NEAR = 1,
     FAR = 10000,
     X_RESOLUTION = 16,
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
-    DROP_RATE = 200,
     fin = true;
 
    var GUIOptions = function() {
@@ -73,7 +69,6 @@ PHOTOVIS.Surface = new function() {
     };
 
     this.setUpGUI();
-
 
 
     // create our stuff

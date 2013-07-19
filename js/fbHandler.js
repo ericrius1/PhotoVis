@@ -3,6 +3,7 @@ var PHOTOVIS = PHOTOVIS || {};
 PHOTOVIS.FB = new function() {
 
   var bandLikes = [];
+  var photoURLS = [];
 
   this.init = function() {
 
@@ -31,8 +32,21 @@ PHOTOVIS.FB = new function() {
         PHOTOVIS.Audio.init(trackURL);
         $('#fbContainer').hide();
       });
-    })
+    });
+
+
+    FB.api('/me/photos', function(response) {
+      var photos = response.data;
+      //create a shuffled list of photoURLS
+      photoURLS = _.shuffle(_.pluck(photos, 'source'));
+      var photoURL = photoURLS[0];
+    });
   };
+
+  this.begin = function() {
+    var photoURL = photoURLS[0];
+    PHOTOVIS.Surface.init(photoURL);
+  }
 }
 
 
