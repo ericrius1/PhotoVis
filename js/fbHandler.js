@@ -13,7 +13,6 @@ PHOTOVIS.FB = new function() {
       var photoURLS = _.shuffle(_.pluck(photos, 'source'));
       var photoURL = photoURLS[0];
       var index = 1;
-      PHOTOVIS.Audio.init();
       PHOTOVIS.Surface.init(photoURL);
       setInterval(function() {
         var photoURL = photoURLS[index];
@@ -43,9 +42,7 @@ PHOTOVIS.FB = new function() {
         consumer_key: 'cf3043573dc5269cf0199331ff6e2717'
       }, function(search_tracks) {
         var trackURL = "https://api.soundcloud.com/tracks/" +search_tracks[0].id+ "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
-        var audioElement = "<audio preload='auto' autoplay src ="+trackURL+"></audio>"
-        console.log(trackURL);
-        $('body').append(audioElement);
+        PHOTOVIS.Audio.init(trackURL);
       });
     })
   };
