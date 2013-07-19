@@ -2,7 +2,11 @@ var PHOTOVIS = PHOTOVIS || {}
 
 PHOTOVIS.Audio = new function() {
 
-  this.init = function() {
+  this.init = function(trackURL) {
+
+    // var audio = new Audio();
+    // audio.src = trackURL;
+    //audio.autoplay = true;
 
 
     var context;
@@ -23,9 +27,12 @@ PHOTOVIS.Audio = new function() {
     } catch (e) {
       $('#info').text('Web Audio API is not supported in this browser');
     }
+
+
     var request = new XMLHttpRequest();
-    request.open("GET", url, true);
+    request.open('GET', trackURL, true);
     request.responseType = "arraybuffer";
+
 
     request.onload = function() {
       context.decodeAudioData(
@@ -35,6 +42,7 @@ PHOTOVIS.Audio = new function() {
             $('#info').text('Error decoding file data');
             return;
           }
+
 
           sourceJs = context.createJavaScriptNode(2048);
           sourceJs.buffer = buffer;
