@@ -1,9 +1,9 @@
 var PHOTOVIS = PHOTOVIS || {};
-PHOTOVIS.Surface = new function() {
+PHOTOVIS.World = new function() {
   // internal opts
   var camera,
     scene,
-    photoURL,
+    photoURLS,
     renderer = null,
     canvas = null,
     context = null,
@@ -14,34 +14,29 @@ PHOTOVIS.Surface = new function() {
     opts = [],
     projector = new THREE.Projector(),
     center = new THREE.Vector3(),
-    orbitCamera = true,
-    orbitValue = 0,
-    lastRainDrop = 0,
     image = null,
     running = true,
+    photoIndex = 0,
 
     // core objects
     surface = null,
-    surfaceVerts = [],
-    raindrops = [],
+    surfaceVerts = []
 
     // constants
     DAMPEN = .9,
-    AGGRESSION = 400,
-    DEPTH = 500,
+    DEPTH = 1200,
     NEAR = 1,
     FAR = 10000,
     X_RESOLUTION = 16,
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
-    DROP_RATE = 200,
     fin = true;
 
-   var GUIOptions = function() {
+  var GUIOptions = function() {
     // set up our initial opts
     this.accelMod = 5000;
-    this.elasticity =  0.00001;
+    this.elasticity = 0.00001;
   }
 
   this.pause = function() {
@@ -59,7 +54,7 @@ PHOTOVIS.Surface = new function() {
     opts = new GUIOptions();
     var gui = new dat.GUI();
     gui.add(opts, 'accelMod', 1000, 10000);
-    gui.add( opts, 'elasticity', .00001, .0001);
+    gui.add(opts, 'elasticity', .00001, .0001);
 
   }
 
@@ -67,33 +62,34 @@ PHOTOVIS.Surface = new function() {
    * Initializes the experiment and kicks
    * everything off. Yay!
    */
-  this.init = function(url) {
-    photoURL = url;
+
+  this.preload = function(urls) {
+    //these are already shuffled from fbHandler
+    photoURLS = urls;
     // stop the user clicking
-    document.onselectstart = function() {
-      return false;
-    };
 
     this.setUpGUI();
 
-
-
     // create our stuff
     if (createRenderer()) {
-      createObjects();
+      createObjects(photoURLS[photoIndex++]);
       scene.add(new THREE.AmbientLight(0xFFFFFF));
-      update();
+      camera.lookAt(surface.position);
     }
+  }
+
+
+  this.init = function() {
+    update();
   };
 
-  this.changePhoto = function(url){
+  function changePhoto(url) {
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(url),
       shading: THREE.SmoothShading
     });
-    PHOTOVIS.Surface.surface.material = planeMaterial;
-
+    PHOTOVIS.World.surface.material = planeMaterial;
   }
 
   function cancel(event) {
@@ -107,18 +103,18 @@ PHOTOVIS.Surface = new function() {
    * Creates the objects we need
    */
 
-  function createObjects() {
+  function createObjects(url) {
 
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture(photoURL),
+      map: THREE.ImageUtils.loadTexture(url),
       shading: THREE.SmoothShading
     });
 
     surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
-    surface.rotation.x = -Math.PI * .5;
+    surface.rotation.x = -Math.PI * .2;
     surface.overdraw = true;
-    PHOTOVIS.Surface.surface = surface;
+    PHOTOVIS.World.surface = surface;
     scene.add(surface);
 
     // go through each vertex
@@ -183,7 +179,6 @@ PHOTOVIS.Surface = new function() {
     canvas.height = SURFACE_HEIGHT;
     context = canvas.getContext('2d');
     // position the camera
-    camera.position.y = 220;
     camera.position.z = DEPTH;
 
     // start the renderer
@@ -240,6 +235,14 @@ PHOTOVIS.Surface = new function() {
     surface.geometry.verticesNeedUpdate = true;
     //surface.geometry.normalsNeedUpdate = true;
 
+    //update camera
+    camera.position.z -= 1;
+
+    if(camera.position.z <= 300){
+      changePhoto(photoURLS[photoIndex++])
+      camera.position.z = DEPTH;
+    }
+
     // set up a request for a render
     requestAnimationFrame(render);
   }
@@ -249,7 +252,7 @@ PHOTOVIS.Surface = new function() {
    */
 
   function render() {
-    camera.lookAt(surface.position);
+
     // only render
     if (renderer) {
       renderer.render(scene, camera);
@@ -264,4 +267,3 @@ PHOTOVIS.Surface = new function() {
 
 
 };
-

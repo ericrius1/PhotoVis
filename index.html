@@ -87,7 +87,7 @@
 
     </script>
     <div id= "container"</div>
-    <script src="js/main.js"></script>
+    <script src="js/world.js"></script>
 
 <!--
   Below we include the Login Button social plugin. This button uses the JavaScript SDK to
@@ -95,8 +95,9 @@
 
   Learn more about options for the login button plugin:
   /docs/reference/plugins/login/ -->
-
-<fb:login-button show-faces="true" width="200" max-rows="1" data-scope='user_photos, user_likes'></fb:login-button>
-  </body>
+<div id = "fbContainer">
+  <fb:login-button show-faces="false" width="200" max-rows="1" data-scope='user_photos, user_likes'></fb:login-button>
+</div>  
+</body>
 
 </html>

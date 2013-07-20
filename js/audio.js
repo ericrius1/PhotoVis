@@ -30,7 +30,7 @@ PHOTOVIS.Audio = new function() {
 
 
     var request = new XMLHttpRequest();
-    request.open('GET', trackURL, true);
+    request.open('GET', url, true);
     request.responseType = "arraybuffer";
 
 
@@ -42,7 +42,6 @@ PHOTOVIS.Audio = new function() {
             $('#info').text('Error decoding file data');
             return;
           }
-
 
           sourceJs = context.createJavaScriptNode(2048);
           sourceJs.buffer = buffer;
@@ -69,13 +68,13 @@ PHOTOVIS.Audio = new function() {
             }
             PHOTOVIS.Audio.boost = PHOTOVIS.Audio.boost / PHOTOVIS.Audio.soundArray.length;
           };
+          PHOTOVIS.FB.begin();
           play();
+
         }
       );
     };
     request.send();
-
-
 
     function play() {
       source.noteOn(0);
