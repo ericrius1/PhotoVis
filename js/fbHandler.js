@@ -10,8 +10,13 @@ PHOTOVIS.FB = new function() {
 
     FB.api('/me/photos', function(response) {
       var photos = response.data;
-      //create a shuffled list of photoURLS
-      photoURLS = _.shuffle(_.pluck(photos, 'source'));
+
+      //Get the URLs for the highest quality photos and shuffle them
+      highResPhotos = _.pluck(photos, 'images');
+      for(var i = 0;  i < highResPhotos.length; i++){
+        highResPhotos[i] = highResPhotos[i][0];
+      }
+      photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
     });
 
     //Get user music likes

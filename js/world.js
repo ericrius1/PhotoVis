@@ -75,6 +75,7 @@ PHOTOVIS.Surface = new function() {
     if (createRenderer()) {
       createObjects();
       scene.add(new THREE.AmbientLight(0xFFFFFF));
+      camera.lookAt(surface.position);
       update();
     }
   };
@@ -108,7 +109,6 @@ PHOTOVIS.Surface = new function() {
     });
 
     surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
-    surface.rotation.x = -Math.PI * .2;
     surface.overdraw = true;
     PHOTOVIS.Surface.surface = surface;
     scene.add(surface);
@@ -175,7 +175,6 @@ PHOTOVIS.Surface = new function() {
     canvas.height = SURFACE_HEIGHT;
     context = canvas.getContext('2d');
     // position the camera
-    camera.position.y = 220;
     camera.position.z = DEPTH;
 
     // start the renderer
@@ -232,6 +231,9 @@ PHOTOVIS.Surface = new function() {
     surface.geometry.verticesNeedUpdate = true;
     //surface.geometry.normalsNeedUpdate = true;
 
+    //update camera
+    camera.position.z-= 1;
+
     // set up a request for a render
     requestAnimationFrame(render);
   }
@@ -241,7 +243,7 @@ PHOTOVIS.Surface = new function() {
    */
 
   function render() {
-    camera.lookAt(surface.position);
+
     // only render
     if (renderer) {
       renderer.render(scene, camera);
