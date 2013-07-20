@@ -1,6 +1,6 @@
-var PHOTOVIS = PHOTOVIS || {}
+var PV = PV || {}
 
-PHOTOVIS.Audio = new function() {
+PV.Audio = new function() {
 
   this.init = function(trackURL) {
 
@@ -60,15 +60,15 @@ PHOTOVIS.Audio = new function() {
 
 
           this.sourceJs.onaudioprocess = function(e) {
-            PHOTOVIS.Audio.soundArray = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(PHOTOVIS.Audio.soundArray);
+            PV.Audio.soundArray = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(PV.Audio.soundArray);
             this.boost = 0;
-            for (var i = 0; i < PHOTOVIS.Audio.soundArray.length; i++) {
-              PHOTOVIS.Audio.boost += PHOTOVIS.Audio.soundArray[i];
+            for (var i = 0; i < PV.Audio.soundArray.length; i++) {
+              PV.Audio.boost += PV.Audio.soundArray[i];
             }
-            PHOTOVIS.Audio.boost = PHOTOVIS.Audio.boost / PHOTOVIS.Audio.soundArray.length;
+            PV.Audio.boost = PV.Audio.boost / PV.Audio.soundArray.length;
           };
-          PHOTOVIS.FB.begin();
+          PV.FB.begin();
           play();
 
         }
