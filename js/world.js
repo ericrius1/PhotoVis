@@ -3,7 +3,7 @@ PHOTOVIS.World = new function() {
   // internal opts
   var camera,
     scene,
-    photoURL,
+    photoURLS,
     renderer = null,
     canvas = null,
     context = null,
@@ -16,6 +16,7 @@ PHOTOVIS.World = new function() {
     center = new THREE.Vector3(),
     image = null,
     running = true,
+    photoIndex = 0,
 
     // core objects
     surface = null,
@@ -23,7 +24,7 @@ PHOTOVIS.World = new function() {
 
     // constants
     DAMPEN = .9,
-    DEPTH = 600,
+    DEPTH = 1200,
     NEAR = 1,
     FAR = 10000,
     X_RESOLUTION = 16,
@@ -62,15 +63,16 @@ PHOTOVIS.World = new function() {
    * everything off. Yay!
    */
 
-  this.preload = function(url) {
-    photoURL = url;
+  this.preload = function(urls) {
+    //these are already shuffled from fbHandler
+    photoURLS = urls;
     // stop the user clicking
 
     this.setUpGUI();
 
     // create our stuff
     if (createRenderer()) {
-      createObjects();
+      createObjects(photoURLS[photoIndex++]);
       scene.add(new THREE.AmbientLight(0xFFFFFF));
       camera.lookAt(surface.position);
     }
@@ -81,7 +83,7 @@ PHOTOVIS.World = new function() {
     update();
   };
 
-  this.changePhoto = function(url) {
+  function changePhoto(url) {
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(url),
@@ -101,11 +103,11 @@ PHOTOVIS.World = new function() {
    * Creates the objects we need
    */
 
-  function createObjects() {
+  function createObjects(url) {
 
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture(photoURL),
+      map: THREE.ImageUtils.loadTexture(url),
       shading: THREE.SmoothShading
     });
 
@@ -235,6 +237,11 @@ PHOTOVIS.World = new function() {
 
     //update camera
     camera.position.z -= 1;
+
+    if(camera.position.z <= 300){
+      changePhoto(photoURLS[photoIndex++])
+      camera.position.z = DEPTH;
+    }
 
     // set up a request for a render
     requestAnimationFrame(render);

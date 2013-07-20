@@ -17,7 +17,7 @@ PHOTOVIS.FB = new function() {
         highResPhotos[i] = highResPhotos[i][0];
       }
       photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
-      PHOTOVIS.World.preload(photoURLS[0]);
+      PHOTOVIS.World.preload(photoURLS);
     });
 
     //Get user music likes
