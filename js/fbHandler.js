@@ -6,10 +6,17 @@ PHOTOVIS.FB = new function() {
   var photoURLS = [];
 
   this.init = function() {
+    //Start in 2008
 
 
-    FB.api('/me/photos', function(response) {
+    FB.api('/me/photos', 
+    {
+      'since:': 1199145600,
+      'until': 1230768000
+
+    }, function(response) {
       var photos = response.data;
+      //Page through all your photos
 
       //Get the URLs for the highest quality photos and shuffle them
       highResPhotos = _.pluck(photos, 'images');
