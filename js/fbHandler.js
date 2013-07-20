@@ -3,28 +3,28 @@ var PHOTOVIS = PHOTOVIS || {};
 PHOTOVIS.FB = new function() {
 
   var bandLikes = [];
-  var photoURLS = [];
+  this.photoURLS = [];
+  var startTime = 1199145600;
+  var endTime = 1230768000;
+  var intervalTime = endTime - startTime;
 
   this.init = function() {
     //Start in 2008
-
-
     FB.api('/me/photos', 
     {
-      'since:': 1199145600,
-      'until': 1230768000
+      'since:': startTime,
+      'until': endTime
 
     }, function(response) {
       var photos = response.data;
-      //Page through all your photos
 
       //Get the URLs for the highest quality photos and shuffle them
       highResPhotos = _.pluck(photos, 'images');
       for(var i = 0;  i < highResPhotos.length; i++){
         highResPhotos[i] = highResPhotos[i][0];
       }
-      photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
-      PHOTOVIS.World.preload(photoURLS);
+      PHOTOVIS.FB.photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
+      PHOTOVIS.World.preload();
     });
 
     //Get user music likes
@@ -35,8 +35,6 @@ PHOTOVIS.FB = new function() {
           bandLikes.push(likes[i].name)
         }
       }
-
-
       //Now start audio
       var bandIndex = Math.floor(Math.random() * bandLikes.length);
       SC.get("/tracks", {
@@ -59,7 +57,3 @@ PHOTOVIS.FB = new function() {
     PHOTOVIS.World.init();
   }
 }
-
-
-//<audio preload="auto" autoplay="" src="https://api.soundcloud.com/tracks/101650333/stream?oauth_consumer_key=OV0rhviPClsRKXnSyHuyA"></audio>
-//<audio preload = "auto" autoplaysrc="https://api.soundcloud.com/tracks13478383/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717"></audio>

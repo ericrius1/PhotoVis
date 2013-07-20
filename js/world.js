@@ -3,7 +3,6 @@ PHOTOVIS.World = new function() {
   // internal opts
   var camera,
     scene,
-    photoURLS,
     renderer = null,
     canvas = null,
     context = null,
@@ -31,7 +30,7 @@ PHOTOVIS.World = new function() {
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
-    CAMERA_SPEED = 3,
+    CAMERA_SPEED = 9,
     fin = true;
 
   var GUIOptions = function() {
@@ -64,16 +63,13 @@ PHOTOVIS.World = new function() {
    * everything off. Yay!
    */
 
-  this.preload = function(urls) {
-    //these are already shuffled from fbHandler
-    photoURLS = urls;
-    // stop the user clicking
+  this.preload = function() {
 
     this.setUpGUI();
 
     // create our stuff
     if (createRenderer()) {
-      createObjects(photoURLS[photoIndex++]);
+      createObjects(PHOTOVIS.FB.photoURLS[photoIndex++]);
       scene.add(new THREE.AmbientLight(0xFFFFFF));
       camera.lookAt(surface.position);
     }
@@ -234,13 +230,13 @@ PHOTOVIS.World = new function() {
 
     surface.geometry.computeFaceNormals(true);
     surface.geometry.verticesNeedUpdate = true;
-    //surface.geometry.normalsNeedUpdate = true;
+    surface.geometry.normalsNeedUpdate = true;
 
     //update camera
     camera.position.z -= CAMERA_SPEED;
 
     if(camera.position.z <= 300){
-      changePhoto(photoURLS[photoIndex++])
+      changePhoto(PHOTOVIS.FB.photoURLS[photoIndex++])
       camera.position.z = DEPTH;
     }
 
