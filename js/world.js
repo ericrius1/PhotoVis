@@ -1,5 +1,5 @@
 var PHOTOVIS = PHOTOVIS || {};
-PHOTOVIS.Surface = new function() {
+PHOTOVIS.World = new function() {
   // internal opts
   var camera,
     scene,
@@ -32,10 +32,10 @@ PHOTOVIS.Surface = new function() {
     SURFACE_HEIGHT = 400,
     fin = true;
 
-   var GUIOptions = function() {
+  var GUIOptions = function() {
     // set up our initial opts
     this.accelMod = 5000;
-    this.elasticity =  0.00001;
+    this.elasticity = 0.00001;
   }
 
   this.pause = function() {
@@ -53,7 +53,7 @@ PHOTOVIS.Surface = new function() {
     opts = new GUIOptions();
     var gui = new dat.GUI();
     gui.add(opts, 'accelMod', 1000, 10000);
-    gui.add( opts, 'elasticity', .00001, .0001);
+    gui.add(opts, 'elasticity', .00001, .0001);
 
   }
 
@@ -61,32 +61,33 @@ PHOTOVIS.Surface = new function() {
    * Initializes the experiment and kicks
    * everything off. Yay!
    */
-  this.init = function(url) {
+
+  this.preload = function(url) {
     photoURL = url;
     // stop the user clicking
-    document.onselectstart = function() {
-      return false;
-    };
 
     this.setUpGUI();
-
 
     // create our stuff
     if (createRenderer()) {
       createObjects();
       scene.add(new THREE.AmbientLight(0xFFFFFF));
       camera.lookAt(surface.position);
-      update();
     }
+  }
+
+
+  this.init = function() {
+    update();
   };
 
-  this.changePhoto = function(url){
+  this.changePhoto = function(url) {
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(url),
       shading: THREE.SmoothShading
     });
-    PHOTOVIS.Surface.surface.material = planeMaterial;
+    PHOTOVIS.World.surface.material = planeMaterial;
   }
 
   function cancel(event) {
@@ -109,8 +110,9 @@ PHOTOVIS.Surface = new function() {
     });
 
     surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
+    surface.rotation.x = -Math.PI * .2;
     surface.overdraw = true;
-    PHOTOVIS.Surface.surface = surface;
+    PHOTOVIS.World.surface = surface;
     scene.add(surface);
 
     // go through each vertex
@@ -232,7 +234,7 @@ PHOTOVIS.Surface = new function() {
     //surface.geometry.normalsNeedUpdate = true;
 
     //update camera
-    camera.position.z-= 1;
+    camera.position.z -= 1;
 
     // set up a request for a render
     requestAnimationFrame(render);
@@ -258,4 +260,3 @@ PHOTOVIS.Surface = new function() {
 
 
 };
-

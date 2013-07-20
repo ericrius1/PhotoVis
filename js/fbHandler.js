@@ -17,6 +17,7 @@ PHOTOVIS.FB = new function() {
         highResPhotos[i] = highResPhotos[i][0];
       }
       photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
+      PHOTOVIS.World.preload(photoURLS[0]);
     });
 
     //Get user music likes
@@ -48,8 +49,7 @@ PHOTOVIS.FB = new function() {
   };
 
   this.begin = function() {
-    var photoURL = photoURLS[0];
-    PHOTOVIS.Surface.init(photoURL);
+    PHOTOVIS.World.init();
   }
 }
 
