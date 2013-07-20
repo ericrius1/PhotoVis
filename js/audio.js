@@ -30,7 +30,7 @@ PHOTOVIS.Audio = new function() {
 
 
     var request = new XMLHttpRequest();
-    request.open('GET', trackUrl, true);
+    request.open('GET', trackURL, true);
     request.responseType = "arraybuffer";
 
 
