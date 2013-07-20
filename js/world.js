@@ -31,6 +31,7 @@ PHOTOVIS.World = new function() {
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
+    CAMERA_SPEED = 3,
     fin = true;
 
   var GUIOptions = function() {
@@ -236,7 +237,7 @@ PHOTOVIS.World = new function() {
     //surface.geometry.normalsNeedUpdate = true;
 
     //update camera
-    camera.position.z -= 1;
+    camera.position.z -= CAMERA_SPEED;
 
     if(camera.position.z <= 300){
       changePhoto(photoURLS[photoIndex++])
