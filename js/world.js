@@ -1,5 +1,5 @@
-var PHOTOVIS = PHOTOVIS || {};
-PHOTOVIS.World = new function() {
+var PV = PV || {};
+PV.World = new function() {
   // internal opts
   var camera,
     scene,
@@ -16,6 +16,7 @@ PHOTOVIS.World = new function() {
     image = null,
     running = true,
     photoIndex = 0,
+    photoURLS = {},
 
     // core objects
     surface = null,
@@ -69,7 +70,7 @@ PHOTOVIS.World = new function() {
 
     // create our stuff
     if (createRenderer()) {
-      createObjects(PHOTOVIS.FB.photoURLS[photoIndex++]);
+      createObjects(PV.FB.photoURLS[photoIndex++]);
       scene.add(new THREE.AmbientLight(0xFFFFFF));
       camera.lookAt(surface.position);
     }
@@ -80,13 +81,21 @@ PHOTOVIS.World = new function() {
     update();
   };
 
-  function changePhoto(url) {
+  function changePhoto() {
+    if(photoIndex === PV.FB.photoURLS.length-1){
+      PV.FB.addPhotos();
+      photoIndex = 0;
+
+    }
+    console.log(PV.FB.photoURLS[photoIndex])
+
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
-      map: THREE.ImageUtils.loadTexture(url),
+      map: THREE.ImageUtils.loadTexture(PV.FB.photoURLS[photoIndex]),
       shading: THREE.SmoothShading
     });
-    PHOTOVIS.World.surface.material = planeMaterial;
+    PV.World.surface.material = planeMaterial;
+    photoIndex++
   }
 
   function cancel(event) {
@@ -109,9 +118,9 @@ PHOTOVIS.World = new function() {
     });
 
     surface = new THREE.Mesh(new THREE.PlaneGeometry(SURFACE_WIDTH, SURFACE_HEIGHT, X_RESOLUTION, Y_RESOLUTION), planeMaterial);
-    surface.rotation.x = -Math.PI * .2;
+    surface.rotation.x = -Math.PI * .35;
     surface.overdraw = true;
-    PHOTOVIS.World.surface = surface;
+    PV.World.surface = surface;
     scene.add(surface);
 
     // go through each vertex
@@ -193,11 +202,11 @@ PHOTOVIS.World = new function() {
   function updateMusic() {
     var k = 0;
     for (var i = 0; i < surfaceVerts.length; i++) {
-      var scale = (PHOTOVIS.Audio.soundArray[k] + PHOTOVIS.Audio.boost) / 30;
+      var scale = (PV.Audio.soundArray[k] + PV.Audio.boost) / 30;
       if (scale > 1) {
         surfaceVerts[i].velocity.z = scale;
       }
-      k += (k < PHOTOVIS.Audio.soundArray.length ? 1 : 0);
+      k += (k < PV.Audio.soundArray.length ? 1 : 0);
     }
 
   }
@@ -236,7 +245,7 @@ PHOTOVIS.World = new function() {
     camera.position.z -= CAMERA_SPEED;
 
     if(camera.position.z <= 300){
-      changePhoto(PHOTOVIS.FB.photoURLS[photoIndex++])
+      changePhoto();
       camera.position.z = DEPTH;
     }
 

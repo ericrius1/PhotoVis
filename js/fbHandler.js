@@ -1,31 +1,17 @@
-var PHOTOVIS = PHOTOVIS || {};
+var PV = PV || {};
 
-PHOTOVIS.FB = new function() {
+PV.FB = new function() {
 
   var bandLikes = [];
+  var worldLoaded = false;
   this.photoURLS = [];
-  var startTime = 1199145600;
-  var endTime = 1230768000;
-  var intervalTime = endTime - startTime;
+  var startTime = 1167609600;
+  var endTime = 1170288000;
+  var intervalTime = (endTime - startTime) * 2;
 
   this.init = function() {
-    //Start in 2008
-    FB.api('/me/photos', 
-    {
-      'since:': startTime,
-      'until': endTime
 
-    }, function(response) {
-      var photos = response.data;
-
-      //Get the URLs for the highest quality photos and shuffle them
-      highResPhotos = _.pluck(photos, 'images');
-      for(var i = 0;  i < highResPhotos.length; i++){
-        highResPhotos[i] = highResPhotos[i][0];
-      }
-      PHOTOVIS.FB.photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
-      PHOTOVIS.World.preload();
-    });
+    this.addPhotos();
 
     //Get user music likes
     FB.api('me/likes', function(response) {
@@ -47,13 +33,41 @@ PHOTOVIS.FB = new function() {
         console.log("MUSICIAN: ", bandLikes[bandIndex]);
         console.log("SONG NAME: ", search_tracks[trackIndex].title);
         var trackURL = "https://api.soundcloud.com/tracks/" + search_tracks[trackIndex].id + "/stream?oauth_consumer_key=cf3043573dc5269cf0199331ff6e2717";
-        PHOTOVIS.Audio.init(trackURL);
+        PV.Audio.init(trackURL);
         $('#fbContainer').hide();
       });
     });
   };
 
+  this.addPhotos = function(){
+    FB.api('/me/photos', 
+    {
+      'since:': startTime,
+      'until': endTime,
+      limit: '5'
+
+    }, function(response) {
+      var photos = response.data;
+
+      //Get the URLs for the highest quality photos and shuffle them
+      highResPhotos = _.pluck(photos, 'images');
+      for(var i = 0;  i < highResPhotos.length; i++){
+        highResPhotos[i] = highResPhotos[i][0];
+      }
+      PV.FB.photoURLS =  _.shuffle(_.pluck(highResPhotos, 'source'));
+      if(!worldLoaded){
+        PV.World.preload();
+        worldLoaded = true;
+      }
+
+      startTime += intervalTime;
+      endTime +=intervalTime;
+
+    });
+
+  }
+
   this.begin = function() {
-    PHOTOVIS.World.init();
+    PV.World.init();
   }
 }

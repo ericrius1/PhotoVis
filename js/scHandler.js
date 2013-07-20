@@ -1,8 +1,8 @@
-PHOTOVIS = PHOTOVIS || {}
+PV = PV || {}
 
-PHOTOVIS.SC = new function(){
+PV.SC = new function(){
 
-  PHOTOVIS.SC.init = function(){
+  PV.SC.init = function(){
 
     
   }
