@@ -6,7 +6,6 @@ PHOTOVIS.FB = new function() {
   var photoURLS = [];
 
   this.init = function() {
-    //Start in 2008
 
 
     FB.api('/me/photos', 
