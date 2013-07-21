@@ -85,9 +85,7 @@ PV.World = new function() {
     if(photoIndex === PV.FB.photoURLS.length-1){
       PV.FB.addPhotos();
       photoIndex = 0;
-
     }
-    console.log(PV.FB.photoURLS[photoIndex])
 
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,

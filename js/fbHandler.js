@@ -44,17 +44,21 @@ PV.FB = new function() {
     {
       'since:': startTime,
       'until': endTime,
-      limit: '5'
+      limit: 3
 
     }, function(response) {
       var photos = response.data;
+      for(var i = 0 ; i < photos.length; i++){
+        console.log(photos[i].source);
+      }
 
       //Get the URLs for the highest quality photos and shuffle them
       highResPhotos = _.pluck(photos, 'images');
       for(var i = 0;  i < highResPhotos.length; i++){
         highResPhotos[i] = highResPhotos[i][0];
       }
-      PV.FB.photoURLS =  _.shuffle(_.pluck(highResPhotos, 'source'));
+      //PV.FB.photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
+      PV.FB.photoURLS = _.pluck(highResPhotos, 'source');
       if(!worldLoaded){
         PV.World.preload();
         worldLoaded = true;
