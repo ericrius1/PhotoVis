@@ -33,7 +33,7 @@ PV.World = new function() {
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
-    CAMERA_SPEED = 9,
+    CAMERA_SPEED = 3,
     fin = true;
 
   var GUIOptions = function() {
@@ -80,7 +80,6 @@ PV.World = new function() {
 
 
   this.init = function() {
-    debugger;
     controls = new THREE.TrackballControls(camera, $container[0]);
     update();
   };
@@ -92,7 +91,8 @@ PV.World = new function() {
       shading: THREE.SmoothShading
     });
     PV.World.surface.material = planeMaterial;
-    photoIndex++
+    if(photoIndex < PV.FB.photoURLS.length - 1) photoIndex++
+
   }
 
   function cancel(event) {
@@ -227,7 +227,7 @@ PV.World = new function() {
   }
 
   function update() {
-    controls.update();
+
     updateMusic();
     var v = surfaceVerts.length;
     while (v--) {
@@ -277,6 +277,7 @@ PV.World = new function() {
 
     // only render
     if (renderer) {
+      //controls.update();
       renderer.render(scene, camera);
     }
 

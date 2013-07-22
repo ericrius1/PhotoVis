@@ -68,7 +68,7 @@ PV.Audio = new function() {
             }
             PV.Audio.boost = PV.Audio.boost / PV.Audio.soundArray.length;
           };
-          play();
+          //play();
 
         }
       );
