@@ -5,9 +5,10 @@ PV.FB = new function() {
   var bandLikes = [];
   var worldLoaded = false;
   this.photoURLS = [];
-  var startTime = 1167609600;
-  var endTime = 1170288000;
-  var intervalTime = (endTime - startTime) * 2;
+  var startTime = 1262304000;
+  var endTime = 1293840000;
+  var finalTime = 1370044800
+  var intervalTime = (endTime - startTime);
 
   this.init = function() {
 
@@ -42,34 +43,40 @@ PV.FB = new function() {
   };
 
   this.addPhotos = function(){
+    console.log("START TTIME: ", startTime);
+    console.log("ENDTIME: ", endTime);
     FB.api('/me/photos', 
     {
       'since:': startTime,
       'until': endTime,
-      limit: '5'
+      limit: 10
 
     }, function(response) {
+      if(startTime >= finalTime){
+        console.log("LENGTH", PV.FB.photoURLS.length);
+        PV.World.preload();
+        PV.World.init();
+        return;
+      }
       var photos = response.data;
+      for(var i = 0 ; i < photos.length; i++){
+        console.log(photos[i].source);
+      }
 
       //Get the URLs for the highest quality photos and shuffle them
       highResPhotos = _.pluck(photos, 'images');
       for(var i = 0;  i < highResPhotos.length; i++){
         highResPhotos[i] = highResPhotos[i][0];
       }
-      PV.FB.photoURLS =  _.shuffle(_.pluck(highResPhotos, 'source'));
-      if(!worldLoaded){
-        PV.World.preload();
-        worldLoaded = true;
-      }
+      PV.FB.photoURLS.push.apply(PV.FB.photoURLS, _.shuffle(_.pluck(highResPhotos, 'source'))); 
+      PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
+
 
       startTime += intervalTime;
       endTime +=intervalTime;
+      PV.FB.addPhotos();
 
     });
 
-  }
-
-  this.begin = function() {
-    PV.World.init();
   }
 }

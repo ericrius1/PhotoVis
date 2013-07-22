@@ -17,6 +17,8 @@ PV.World = new function() {
     running = true,
     photoIndex = 0,
     photoURLS = {},
+    controls,
+    addPhotosCount = 0,
 
     // core objects
     surface = null,
@@ -31,7 +33,7 @@ PV.World = new function() {
     Y_RESOLUTION = 16,
     SURFACE_WIDTH = 400,
     SURFACE_HEIGHT = 400,
-    CAMERA_SPEED = 9,
+    CAMERA_SPEED = 3,
     fin = true;
 
   var GUIOptions = function() {
@@ -78,24 +80,19 @@ PV.World = new function() {
 
 
   this.init = function() {
+    controls = new THREE.TrackballControls(camera, $container[0]);
     update();
   };
 
   function changePhoto() {
-    if(photoIndex === PV.FB.photoURLS.length-1){
-      PV.FB.addPhotos();
-      photoIndex = 0;
-
-    }
-    console.log(PV.FB.photoURLS[photoIndex])
-
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(PV.FB.photoURLS[photoIndex]),
       shading: THREE.SmoothShading
     });
     PV.World.surface.material = planeMaterial;
-    photoIndex++
+    if(photoIndex < PV.FB.photoURLS.length - 1) photoIndex++
+
   }
 
   function cancel(event) {
@@ -169,6 +166,24 @@ PV.World = new function() {
         });
       }
     }
+
+    //TUNNEL
+    var geometry = new THREE.CylinderGeometry(1, 1, 30, 32, 1, true);
+    texture = THREE.ImageUtils.loadTexture(url);
+    texture.wrapT = THREE.RepeatWrapping;
+
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xFFFFFF,
+      map: texture
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = Math.PI / 2;
+    scene.add(mesh);
+
+    mesh.flipSided = true;
+
+    //LIGHTING
+
   }
 
   /**
@@ -212,6 +227,7 @@ PV.World = new function() {
   }
 
   function update() {
+
     updateMusic();
     var v = surfaceVerts.length;
     while (v--) {
@@ -244,7 +260,7 @@ PV.World = new function() {
     //update camera
     camera.position.z -= CAMERA_SPEED;
 
-    if(camera.position.z <= 300){
+    if (camera.position.z <= 300) {
       changePhoto();
       camera.position.z = DEPTH;
     }
@@ -261,6 +277,7 @@ PV.World = new function() {
 
     // only render
     if (renderer) {
+      //controls.update();
       renderer.render(scene, camera);
     }
 
