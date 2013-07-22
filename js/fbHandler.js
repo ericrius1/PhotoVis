@@ -5,8 +5,9 @@ PV.FB = new function() {
   var bandLikes = [];
   var worldLoaded = false;
   this.photoURLS = [];
-  var startTime = 1167609600;
-  var endTime = 1180656000;
+  var startTime = 1262304000;
+  var endTime = 1293840000;
+  var finalTime = 1370044800
   var intervalTime = (endTime - startTime);
 
   this.init = function() {
@@ -49,6 +50,11 @@ PV.FB = new function() {
       limit: 5
 
     }, function(response) {
+      if(startTime >= finalTime){
+        PV.World.preload();
+        PV.World.init();
+        return;
+      }
       var photos = response.data;
       for(var i = 0 ; i < photos.length; i++){
         console.log(photos[i].source);
@@ -62,19 +68,13 @@ PV.FB = new function() {
       //PV.FB.photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
       PV.FB.photoURLS.push.apply(PV.FB.photoURLS, _.pluck(highResPhotos, 'source')); 
       PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
-      if(!worldLoaded){
-        PV.World.preload();
-        worldLoaded = true;
-      }
+
 
       startTime += intervalTime;
       endTime +=intervalTime;
+      PV.FB.addPhotos();
 
     });
 
-  }
-
-  this.begin = function() {
-    PV.World.init();
   }
 }

@@ -80,16 +80,12 @@ PV.World = new function() {
 
 
   this.init = function() {
+    debugger;
     controls = new THREE.TrackballControls(camera, $container[0]);
     update();
   };
 
   function changePhoto() {
-    if (photoIndex === PV.FB.photoURLS.length - 2) {
-      PV.FB.addPhotos();
-      console.log("ADD PHOTOS COUNT: ", addPhotosCount)
-      addPhotosCount++;
-    }
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(PV.FB.photoURLS[photoIndex]),
