@@ -49,11 +49,12 @@ PV.FB = new function() {
     {
       'since:': startTime,
       'until': endTime,
-      limit: 10
+      limit: 5
 
     }, function(response) {
       if(startTime >= finalTime){
         console.log("LENGTH", PV.FB.photoURLS.length);
+        PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
         PV.World.preload();
         PV.World.init();
         return;
@@ -69,7 +70,7 @@ PV.FB = new function() {
         highResPhotos[i] = highResPhotos[i][0];
       }
       PV.FB.photoURLS.push.apply(PV.FB.photoURLS, _.shuffle(_.pluck(highResPhotos, 'source'))); 
-      PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
+
 
 
       startTime += intervalTime;
