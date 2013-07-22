@@ -40,6 +40,8 @@ PV.FB = new function() {
   };
 
   this.addPhotos = function(){
+    console.log("START TTIME: ", startTime);
+    console.log("ENDTIME: ", endTime);
     FB.api('/me/photos', 
     {
       'since:': startTime,

@@ -17,6 +17,8 @@ PV.World = new function() {
     running = true,
     photoIndex = 0,
     photoURLS = {},
+    controls,
+    addPhotosCount = 0,
 
     // core objects
     surface = null,
@@ -78,13 +80,16 @@ PV.World = new function() {
 
 
   this.init = function() {
+    controls = new THREE.TrackballControls(camera, $container[0]);
     update();
   };
 
   function changePhoto() {
-    if(photoIndex === PV.FB.photoURLS.length-1){
+    if (photoIndex === PV.FB.photoURLS.length - 1) {
       PV.FB.addPhotos();
       photoIndex = 0;
+      console.log("ADD PHOTOS COUNT: ", addPhotosCount)
+      addPhotosCount++;
     }
 
     var planeMaterial = new THREE.MeshLambertMaterial({
@@ -167,6 +172,24 @@ PV.World = new function() {
         });
       }
     }
+
+    //TUNNEL
+    var geometry = new THREE.CylinderGeometry(1, 1, 30, 32, 1, true);
+    texture = THREE.ImageUtils.loadTexture(url);
+    texture.wrapT = THREE.RepeatWrapping;
+
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xFFFFFF,
+      map: texture
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = Math.PI / 2;
+    scene.add(mesh);
+
+    mesh.flipSided = true;
+
+    //LIGHTING
+
   }
 
   /**
@@ -210,6 +233,7 @@ PV.World = new function() {
   }
 
   function update() {
+    controls.update();
     updateMusic();
     var v = surfaceVerts.length;
     while (v--) {
@@ -242,7 +266,7 @@ PV.World = new function() {
     //update camera
     camera.position.z -= CAMERA_SPEED;
 
-    if(camera.position.z <= 300){
+    if (camera.position.z <= 300) {
       changePhoto();
       camera.position.z = DEPTH;
     }
