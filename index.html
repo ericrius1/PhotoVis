@@ -32,6 +32,8 @@
           //appId: '301734256630292', // App ID
           //deploy
           appId: '555469564510598',
+          //deploy
+          appId: process.env.PHOTOVIS_FBAPP_ID,
           status: true, // check login status
           cookie: true, // enable cookies to allow the server to access the session
           xfbml: true // parse XFBML
@@ -49,7 +51,6 @@
             console.log("You are not authorized")
             FB.login({scope: 'user_photos, user_actions.music'});
           }
-          else alert(response.status);
         });
       };
 

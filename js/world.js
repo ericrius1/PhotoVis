@@ -173,7 +173,7 @@ PV.World = new function() {
     texture.wrapT = THREE.RepeatWrapping;
 
     var material = new THREE.MeshLambertMaterial({
-      color: 0xFFFFFF,
+      color: 0xFF00FF,
       map: texture
     });
     var mesh = new THREE.Mesh(geometry, material);

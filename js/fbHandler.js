@@ -5,8 +5,8 @@ PV.FB = new function() {
   var bandLikes = [];
   var worldLoaded = false;
   this.photoURLS = [];
-  var startTime = 1262304000;
-  var endTime = 1293840000;
+  var startTime = 1136073600;
+  var endTime = 1167609600;
   var finalTime = 1370044800
   var intervalTime = (endTime - startTime);
 
