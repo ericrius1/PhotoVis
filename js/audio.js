@@ -30,7 +30,7 @@ PV.Audio = new function() {
 
 
     var request = new XMLHttpRequest();
-    request.open('GET', url, true);
+    request.open('GET', trackURL, true);
     request.responseType = "arraybuffer";
 
 
@@ -68,7 +68,7 @@ PV.Audio = new function() {
             }
             PV.Audio.boost = PV.Audio.boost / PV.Audio.soundArray.length;
           };
-          //play();
+          play();
 
         }
       );
