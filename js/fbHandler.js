@@ -6,8 +6,8 @@ PV.FB = new function() {
   var worldLoaded = false;
   this.photoURLS = [];
   var startTime = 1167609600;
-  var endTime = 1170288000;
-  var intervalTime = (endTime - startTime) * 2;
+  var endTime = 1180656000;
+  var intervalTime = (endTime - startTime);
 
   this.init = function() {
 
@@ -46,7 +46,7 @@ PV.FB = new function() {
     {
       'since:': startTime,
       'until': endTime,
-      limit: 3
+      limit: 5
 
     }, function(response) {
       var photos = response.data;
@@ -60,7 +60,8 @@ PV.FB = new function() {
         highResPhotos[i] = highResPhotos[i][0];
       }
       //PV.FB.photoURLS = _.shuffle(_.pluck(highResPhotos, 'source'));
-      PV.FB.photoURLS = _.pluck(highResPhotos, 'source');
+      PV.FB.photoURLS.push.apply(PV.FB.photoURLS, _.pluck(highResPhotos, 'source')); 
+      PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
       if(!worldLoaded){
         PV.World.preload();
         worldLoaded = true;

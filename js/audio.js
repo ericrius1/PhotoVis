@@ -30,7 +30,7 @@ PV.Audio = new function() {
 
 
     var request = new XMLHttpRequest();
-    request.open('GET', trackURL, true);
+    request.open('GET', url, true);
     request.responseType = "arraybuffer";
 
 

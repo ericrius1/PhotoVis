@@ -85,13 +85,11 @@ PV.World = new function() {
   };
 
   function changePhoto() {
-    if (photoIndex === PV.FB.photoURLS.length - 1) {
+    if (photoIndex === PV.FB.photoURLS.length - 2) {
       PV.FB.addPhotos();
-      photoIndex = 0;
       console.log("ADD PHOTOS COUNT: ", addPhotosCount)
       addPhotosCount++;
     }
-
     var planeMaterial = new THREE.MeshLambertMaterial({
       color: 0xFFFFFF,
       map: THREE.ImageUtils.loadTexture(PV.FB.photoURLS[photoIndex]),
