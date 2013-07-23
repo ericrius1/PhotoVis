@@ -38,6 +38,10 @@ html, body {
 /*  background: #000;*/
 }
 
+.intro{
+  color: black;
+}
+
 #container
 {
   height: 100%;
