@@ -23,7 +23,7 @@ $(document).ready(function() {
     FB.Event.subscribe('auth.authResponseChange', function(response) {
       // Here we specify what we do with the response anytime this event occurs. 
       if (response.status === 'connected') {
-        $('.intro').hide();
+        $('.introContainer').hide();
         PV.FB.init();
       } else {
         FB.login({
