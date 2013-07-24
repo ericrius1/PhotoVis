@@ -13,7 +13,6 @@ PV.Audio = new function() {
     var source;
     var analyser;
     var buffer;
-    var url = 'music/lights.mp3';
     this.soundArray = new Array();
     this.boost = 0;
     this.sourceJs;
@@ -68,6 +67,7 @@ PV.Audio = new function() {
             }
             PV.Audio.boost = PV.Audio.boost / PV.Audio.soundArray.length;
           };
+          $('#load').hide();
           play();
 
         }

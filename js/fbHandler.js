@@ -6,11 +6,12 @@ PV.FB = new function() {
   var worldLoaded = false;
   this.photoURLS = [];
   //real
-  // var startTime = 1136073600;
-  // var endTime = 1167609600;
+  var startTime = 1136073600;
+  var endTime = 1167609600;
   //testing
-  var startTime = 1325376000;
-  var endTime = 1356998400;
+  // var startTime = 1325376000;
+  // var endTime = 1356998400;
+
   var finalTime = 1370044800
   var intervalTime = (endTime - startTime);
 
@@ -64,7 +65,7 @@ PV.FB = new function() {
         PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
         PV.World.preload();
         PV.World.init();
-        $('#load').hide();
+
 
         return;
       }
