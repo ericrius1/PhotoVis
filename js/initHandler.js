@@ -26,7 +26,6 @@ $(document).ready(function() {
         $('.intro').hide();
         PV.FB.init();
       } else {
-        console.log("You are not authorized")
         FB.login({
           scope: 'user_photos, user_actions.music'
         });

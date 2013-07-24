@@ -40,6 +40,15 @@ html, body {
 
 .intro{
   color: black;
+  font-size: 2em;
+  text-align: center;
+}
+
+.fbContainer{
+  left: 50%;
+  width: 50px;
+  margin-left: -25px;
+  display:inline-block;
 }
 
 #container
