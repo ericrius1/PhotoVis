@@ -67,7 +67,7 @@ PV.World = new function() {
    */
 
   this.preload = function() {
-
+    $('.fbContainer').hide();
     this.setUpGUI();
 
     // create our stuff

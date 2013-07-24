@@ -5,8 +5,12 @@ PV.FB = new function() {
   var bandLikes = [];
   var worldLoaded = false;
   this.photoURLS = [];
-  var startTime = 1136073600;
-  var endTime = 1167609600;
+  //real
+  // var startTime = 1136073600;
+  // var endTime = 1167609600;
+  //testing
+  var startTime = 1325376000;
+  var endTime = 1356998400;
   var finalTime = 1370044800
   var intervalTime = (endTime - startTime);
 
@@ -52,6 +56,8 @@ PV.FB = new function() {
       limit: 5
 
     }, function(response) {
+
+      //we are at present, so
       if(startTime >= finalTime){
         console.log("LENGTH", PV.FB.photoURLS.length);
         PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>Surface</title>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
-    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="lib/jquery.min.js"></script>
     <script src="lib/Three.js"></script>
     <script src="lib/Modernizr.js"></script>
     <script src="lib/underscore.js"></script>
@@ -14,74 +14,21 @@
     <script src="js/audio.js"></script>
     <script src="js/fbHandler.js"></script>
     <script src="http://connect.soundcloud.com/sdk.js"></script>
+    <script src ="js/initHandler.js"></script>
     
   </head>
   <body>
 
-    <div id="fb-root"></div>
-    <script>
-
-       SC.initialize({
-         client_id: 'cf3043573dc5269cf0199331ff6e2717',
-         redirect_uri: 'http://ericrius1.github.io/PhotoVis',
-       });
-      
-      window.fbAsyncInit = function() {
-        FB.init({
-          //local
-          //appId: '301734256630292', // App ID
-          //deploy
-          appId: "555469564510598",
-          status: true, // check login status
-          cookie: true, // enable cookies to allow the server to access the session
-          xfbml: true // parse XFBML
-        });
-
-        // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-        // for any authentication related change, such as login, logout or session refresh. This means that
-        // whenever someone who was previously logged out tries to log in again, the correct case below 
-        // will be handled. 
-        FB.Event.subscribe('auth.authResponseChange', function(response) {
-          // Here we specify what we do with the response anytime this event occurs. 
-          if (response.status === 'connected') {
-            PV.FB.init();
-          } else if (response.status === 'not_authorized') {
-            console.log("You are not authorized")
-            FB.login({scope: 'user_photos, user_actions.music'});
-          }
-        });
-      };
-
-       // Load the SDK asynchronously
-      (function(d) {
-        var js, id = 'facebook-jssdk',
-          ref = d.getElementsByTagName('script')[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement('script');
-        js.id = id;
-        js.async = true;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        ref.parentNode.insertBefore(js, ref);
-      }(document));
-
-
-
-
-    </script>
-    <div id= "container"</div>
+    <div class = "introContainer">
+      <div class = 'intro'>Welcome to Facebook PhotoVis! Sign in with facebook to view a music visualizer incorporating your facebook photos and favorite music!</div>
+      <div id="fb-root"></div>
+      <div class = "fbContainer">
+        <fb:login-button show-faces="false" inline width="200" max-rows="1" data-scope='user_photos, user_likes'></fb:login-button>
+      </div>  
+    </div>
+    <div id= "container"></div>
     <script src="js/world.js"></script>
 
-<!--
-  Below we include the Login Button social plugin. This button uses the JavaScript SDK to
-  present a graphical Login button that triggers the FB.login() function when clicked.
-
-  Learn more about options for the login button plugin:
-  /docs/reference/plugins/login/ -->
-<div id = "fbContainer">
-  <fb:login-button show-faces="false" width="200" max-rows="1" data-scope='user_photos, user_likes'></fb:login-button>
-</div>  
 </body>
 
 </html>
