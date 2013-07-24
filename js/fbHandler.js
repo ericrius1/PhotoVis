@@ -15,6 +15,7 @@ PV.FB = new function() {
   var intervalTime = (endTime - startTime);
 
   this.init = function() {
+    $('body').prepend('<img id = "load" src="images/loader.gif"/>');
 
 
     this.addPhotos();
@@ -63,6 +64,8 @@ PV.FB = new function() {
         PV.FB.photoURLS = _.uniq(PV.FB.photoURLS);
         PV.World.preload();
         PV.World.init();
+        $('#load').hide();
+
         return;
       }
       var photos = response.data;
