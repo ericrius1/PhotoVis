@@ -167,23 +167,6 @@ PV.World = new function() {
       }
     }
 
-    //TUNNEL
-    var geometry = new THREE.CylinderGeometry(1, 1, 30, 32, 1, true);
-    texture = THREE.ImageUtils.loadTexture(url);
-    texture.wrapT = THREE.RepeatWrapping;
-
-    var material = new THREE.MeshLambertMaterial({
-      color: 0xFF00FF,
-      map: texture
-    });
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = Math.PI / 2;
-    scene.add(mesh);
-
-    mesh.flipSided = true;
-
-    //LIGHTING
-
   }
 
   /**
