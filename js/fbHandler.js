@@ -19,8 +19,6 @@ PV.FB = new function() {
 
 
     this.addPhotos();
-
-
     //Get user music likes
     FB.api('me/likes', function(response) {
       var likes = response.data;
@@ -48,8 +46,6 @@ PV.FB = new function() {
   };
 
   this.addPhotos = function(){
-    console.log("START TTIME: ", startTime);
-    console.log("ENDTIME: ", endTime);
     FB.api('/me/photos', 
     {
       'since:': startTime,
