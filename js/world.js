@@ -102,9 +102,7 @@ PV.World = new function() {
     return false;
   }
 
-  /**
-   * Creates the objects we need
-   */
+
 
   function createObjects(url) {
 
@@ -120,22 +118,22 @@ PV.World = new function() {
     PV.World.surface = surface;
     scene.add(surface);
 
-    // go through each vertex
+    // Spring Setup code from Paul Lewis-
+    //http://lab.aerotwist.com/webgl/surface/
 
     surfaceVerts = surface.geometry.vertices;
     sCount = surfaceVerts.length;
 
-    // three.js creates the verts for the
-    // mesh in x,y,z order I think
+   
     while (sCount--) {
       var vertex = surfaceVerts[sCount];
 
       vertex.springs = [];
       vertex.velocity = new THREE.Vector3();
 
-      // connect this vertex to the ones around it
+
       if (vertex.x > (-SURFACE_WIDTH * .5)) {
-        // connect to left
+
         vertex.springs.push({
           start: sCount,
           end: sCount - 1
@@ -143,7 +141,6 @@ PV.World = new function() {
       }
 
       if (vertex.x < (SURFACE_WIDTH * .5)) {
-        // connect to right
         vertex.springs.push({
           start: sCount,
           end: sCount + 1
@@ -151,7 +148,6 @@ PV.World = new function() {
       }
 
       if (vertex.y < (SURFACE_HEIGHT * .5)) {
-        // connect above
         vertex.springs.push({
           start: sCount,
           end: sCount - (X_RESOLUTION + 1)
@@ -159,7 +155,6 @@ PV.World = new function() {
       }
 
       if (vertex.y > (-SURFACE_HEIGHT * .5)) {
-        // connect below
         vertex.springs.push({
           start: sCount,
           end: sCount + (X_RESOLUTION + 1)
