@@ -9,8 +9,8 @@ PV.FB = new function() {
   // var startTime = 1325376000;
   // var endTime = 1356998400;
   //for real
-  var startTime = 1136073600;
-  var endTime = 1167609600;
+  var startTime = 1230768000;
+  var endTime = 1262304000;
   var finalTime = 1370044800
   var intervalTime = (endTime - startTime);
 
@@ -47,7 +47,7 @@ PV.FB = new function() {
     {
       'since:': startTime,
       'until': endTime,
-      limit: 5
+      limit: 10
 
     }, function(response) {
       if(startTime >= finalTime){

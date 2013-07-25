@@ -8,9 +8,9 @@ $(document).ready(function() {
   window.fbAsyncInit = function() {
     FB.init({
       //local
-      //appId: '301734256630292', // App ID
+      appId: '301734256630292', // App ID
       //deploy
-      appId: "555469564510598",
+      //appId: "555469564510598",
       status: true, // check login status
       cookie: true, // enable cookies to allow the server to access the session
       xfbml: true // parse XFBML
