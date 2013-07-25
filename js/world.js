@@ -102,9 +102,7 @@ PV.World = new function() {
     return false;
   }
 
-  /**
-   * Creates the objects we need
-   */
+
 
   function createObjects(url) {
 

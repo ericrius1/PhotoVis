@@ -47,6 +47,8 @@ PV.Audio = new function() {
           sourceJs.connect(context.destination);
           analyser = context.createAnalyser();
           analyser.smoothingTimeConstant = 0.6;
+          //takes a complex waveform and converts it from a single signal 
+          //to information about the frequency components
           analyser.fftSize = 512;
 
           source = context.createBufferSource();
